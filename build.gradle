@@ -1,0 +1,27 @@
+apply plugin: 'application'
+apply plugin: 'groovy'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'uk.co.kenfos.Application'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy:2.4.12'
+    compile 'commons-io:commons-io:2.6'
+    compile 'org.gebish:geb-core:2.0'
+    compile 'org.seleniumhq.selenium:selenium-support:3.6.0'
+    compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.6.0'
+}
+
+task uberjar(type: Jar, dependsOn:[':compileJava',':compileGroovy']) {
+    from files(sourceSets.main.output)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
