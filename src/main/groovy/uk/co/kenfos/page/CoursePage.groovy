@@ -17,20 +17,23 @@ class CoursePage extends Page {
     }
 
     void downloadVideos(String course) {
-        def links = lessonLinks.collect { element -> element.getAttribute(LINK_ATTRIBUTE) }
-        links.collect {
-            browser.go(it)
-            downloadVideo(course, videoTitle.text(), videoLink.getAttribute(LINK_ATTRIBUTE))
+        def links = lessonLinks.collect { element -> element.attr(LINK_ATTRIBUTE) }
+        links.eachWithIndex { link, index ->
+            browser.go(link)
+            downloadVideo(formatCourse(course), formatTitle(index, videoTitle.text()), videoLink.attr(LINK_ATTRIBUTE))
         }
     }
 
     private void downloadVideo(String course, String title, String url) {
         println("Downloading: $title")
-        FileUtils.copyURLToFile(new URL(url), new File("./videos/${formatCourse(course)}/${title}.mp4"))
+        FileUtils.copyURLToFile(new URL(url), new File("./videos/${course}/${title}.mp4"))
     }
 
     private String formatCourse(String course) {
         course.replace(HTTPS, "")
     }
 
+    private String formatTitle(Integer index, String title) {
+        "${index}-${title}"
+    }
 }
