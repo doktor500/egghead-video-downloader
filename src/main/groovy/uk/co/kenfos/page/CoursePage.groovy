@@ -34,6 +34,6 @@ class CoursePage extends Page {
     }
 
     private String formatTitle(Integer index, String title) {
-        "${String.format("%02d", index)}-${title}"
+        "${String.format("%02d", index)}-${title.replace('/', '-')}"
     }
 }
